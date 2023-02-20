@@ -412,6 +412,12 @@ mason_lspconfig.setup_handlers {
 -- Turn on lsp status information
 require('fidget').setup()
 
+
+-- Copilot Setup
+vim.g.copilot_no_tab_map = true
+vim.g.copilot_assume_mapped = true
+vim.g.copilot_tab_fallback = ""
+
 -- nvim-cmp setup
 local cmp = require 'cmp'
 local luasnip = require 'luasnip'
@@ -448,6 +454,17 @@ cmp.setup {
         fallback()
       end
     end, { 'i', 's' }),
+
+    ["<C-j>"] = cmp.mapping(function(fallback)
+      cmp.mapping.abort()
+      local copilot_keys = vim.fn["copilot#Accept"]()
+      if copilot_keys ~= "" then
+        vim.api.nvim_feedkeys(copilot_keys, "i", true)
+      else
+        fallback()
+      end
+    end, { 'i', 's' }),
+
   },
   sources = {
     { name = 'nvim_lsp' },
