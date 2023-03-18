@@ -82,6 +82,20 @@ require('packer').startup(function(use)
   -- Fuzzy Finder Algorithm which requires local dependencies to be built. Only load if `make` is available
   use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make', cond = vim.fn.executable 'make' == 1 }
 
+
+  use {
+    "folke/which-key.nvim",
+    config = function()
+      vim.o.timeout = true
+      vim.o.timeoutlen = 300
+      require("which-key").setup {
+        -- your configuration comes here
+        -- or leave it empty to use the default settings
+        -- refer to the configuration section below
+      }
+    end
+  }
+  
   -- Quarto
   use { 'quarto-dev/quarto-nvim',
     requires = {
@@ -188,27 +202,6 @@ vim.cmd [[colorscheme tokyonight-storm]]
 vim.o.completeopt = 'menuone,noselect'
 
 --------------------------------------------------------------------------------------------
--- Keymaps Aside from Leader
---------------------------------------------------------------------------------------------
-
-
--- See `:help vim.keymap.set()`
-vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
-
--- Remap for dealing with word wrap
-vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
-vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
-
--- Remap for File Browser
-vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
-
--- Diagnostic keymaps
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
-vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist)
-
---------------------------------------------------------------------------------------------
 -- Settings
 --------------------------------------------------------------------------------------------
 
@@ -313,6 +306,9 @@ cmp.setup {
   sources = {
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
+
+    -- required for quarto autocomplete
+    { name = 'otter' },
   },
 }
 
@@ -336,28 +332,11 @@ require('telescope').setup {
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
 
--- See `:help telescope.builtin`
-vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
-vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
-vim.keymap.set('n', '<leader>/', function()
-  -- You can pass additional configuration to telescope to change theme, layout, etc.
-  require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-    winblend = 10,
-    previewer = false,
-  })
-end, { desc = '[/] Fuzzily search in current buffer]' })
-
-vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
-vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
-vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
-vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
-vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
-
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'typescript', 'help', 'vim' },
+  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'typescript', 'help', 'vim', 'markdown' },
 
   highlight = { enable = true },
   indent = { enable = true, disable = { 'python' } },
@@ -512,19 +491,16 @@ mason_lspconfig.setup_handlers {
 -- Turn on lsp status information
 require('fidget').setup()
 
-
-
-
 -- Copilot Setup
 vim.g.copilot_no_tab_map = true
 vim.g.copilot_assume_mapped = true
 vim.g.copilot_tab_fallback = ""
-vim.api.nvim_set_keymap("i", "<C-J>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
+
 
 
 -- Quarto Setup
 local quarto = require'quarto'
-vim.keymap.set('n', '<leader>qp', quarto.quartoPreview, {silent = true, noremap = true})
+
 
 require'quarto'.setup{
   debug = false,
@@ -545,6 +521,99 @@ require'quarto'.setup{
     definition = 'gd'
   }
 }
+
+-- require 'quarto.global'
+-- require 'quarto.autocommands'
+-- require 'quarto.keymap'
+-- require 'quarto.quarto'
+
+--------------------------------------------------------------------------------------------
+-- Keymaps Aside from Leader
+--------------------------------------------------------------------------------------------
+
+-- See `:help vim.keymap.set()`
+vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
+
+-- Remap for dealing with word wrap
+vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+
+-- Remap for File Browser
+vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
+
+-- Diagnostic keymaps
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
+vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist)
+
+
+-- See `:help telescope.builtin`
+vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
+vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
+vim.keymap.set('n', '<leader>/', function()
+  -- You can pass additional configuration to telescope to change theme, layout, etc.
+  require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
+    winblend = 10,
+    previewer = false,
+  })
+end, { desc = '[/] Fuzzily search in current buffer]' })
+
+vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
+vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
+vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
+vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
+vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
+
+local map = vim.api.nvim_set_keymap
+local opts = { noremap = true, silent = true }
+
+-- Move to previous/next
+map('n', '<C-,>', '<Cmd>BufferPrevious<CR>', opts)
+map('n', '<C-.>', '<Cmd>BufferNext<CR>', opts)
+-- Re-order to previous/next
+map('n', '<C-<>', '<Cmd>BufferMovePrevious<CR>', opts)
+map('n', '<C->>', '<Cmd>BufferMoveNext<CR>', opts)
+-- Goto buffer in position...
+map('n', '<C-1>', '<Cmd>BufferGoto 1<CR>', opts)
+map('n', '<C-2>', '<Cmd>BufferGoto 2<CR>', opts)
+map('n', '<C-3>', '<Cmd>BufferGoto 3<CR>', opts)
+map('n', '<C-4>', '<Cmd>BufferGoto 4<CR>', opts)
+map('n', '<C-5>', '<Cmd>BufferGoto 5<CR>', opts)
+map('n', '<C-6>', '<Cmd>BufferGoto 6<CR>', opts)
+map('n', '<C-7>', '<Cmd>BufferGoto 7<CR>', opts)
+map('n', '<C-8>', '<Cmd>BufferGoto 8<CR>', opts)
+map('n', '<C-9>', '<Cmd>BufferGoto 9<CR>', opts)
+map('n', '<C-0>', '<Cmd>BufferLast<CR>', opts)
+-- Pin/unpin buffer
+-- map('n', '<C-p>', '<Cmd>BufferPin<CR>', opts)
+-- Close buffer
+map('n', '<C-c>', '<Cmd>BufferClose<CR>', opts)
+-- Wipeout buffer
+--                 :BufferWipeout
+-- Close commands
+--                 :BufferCloseAllButCurrent
+--                 :BufferCloseAllButPinned
+--                 :BufferCloseAllButCurrentOrPinned
+--                 :BufferCloseBuffersLeft
+--                 :BufferCloseBuffersRight
+-- Magic buffer-picking mode
+map('n', '<C-p>', '<Cmd>BufferPick<CR>', opts)
+-- Sort automatically by...
+-- map('n', '<Space>bb', '<Cmd>BufferOrderByBufferNumber<CR>', opts)
+-- map('n', '<Space>bd', '<Cmd>BufferOrderByDirectory<CR>', opts)
+-- map('n', '<Space>bl', '<Cmd>BufferOrderByLanguage<CR>', opts)
+-- map('n', '<Space>bw', '<Cmd>BufferOrderByWindowNumber<CR>', opts)
+
+
+-- Other:
+-- :BarbarEnable - enables barbar (enabled by default)
+-- :BarbarDisable - very bad command, should never be used
+
+
+vim.keymap.set('n', '<leader>qp', quarto.quartoPreview, {silent = true, noremap = true})
+
+vim.api.nvim_set_keymap("i", "<C-J>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
