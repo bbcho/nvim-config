@@ -613,7 +613,11 @@ map('n', '<C-p>', '<Cmd>BufferPick<CR>', opts)
 
 vim.keymap.set('n', '<leader>qp', quarto.quartoPreview, {silent = true, noremap = true})
 
-vim.api.nvim_set_keymap("i", "<C-J>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
+vim.api.nvim_set_keymap("i", "<C-j>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
+
+vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { silent = true, noremap = true })
+vim.keymap.set('n', ':tt', ':terminal', { silent = true, noremap = true })
+
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
