@@ -31,26 +31,26 @@ require('packer').startup(function(use)
   -- Package manager
   use 'wbthomason/packer.nvim'
 
-  use { -- LSP Configuration & Plugins
-    'neovim/nvim-lspconfig',
-    requires = {
-      -- Automatically install LSPs to stdpath for neovim
-      'williamboman/mason.nvim',
-      'williamboman/mason-lspconfig.nvim',
-
-      -- Useful status updates for LSP
-      'j-hui/fidget.nvim',
-
-      -- Additional lua configuration, makes nvim stuff amazing
-      'folke/neodev.nvim',
-    },
-  }
-
-  use { -- Autocompletion
-    'hrsh7th/nvim-cmp',
-    requires = { 'hrsh7th/cmp-nvim-lsp', 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip' },
-  }
-
+  -- use { -- LSP Configuration & Plugins
+  --   'neovim/nvim-lspconfig',
+  --   requires = {
+  --     -- Automatically install LSPs to stdpath for neovim
+  --     'williamboman/mason.nvim',
+  --     'williamboman/mason-lspconfig.nvim',
+  --
+  --     -- Useful status updates for LSP
+  --     'j-hui/fidget.nvim',
+  --
+  --     -- Additional lua configuration, makes nvim stuff amazing
+  --     'folke/neodev.nvim',
+  --   },
+  -- }
+  --
+  -- use { -- Autocompletion
+  --   'hrsh7th/nvim-cmp',
+  --   requires = { 'hrsh7th/cmp-nvim-lsp', 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip' },
+  -- }
+  --
   use { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     run = function()
@@ -97,28 +97,28 @@ require('packer').startup(function(use)
   }
   
   -- Quarto
-  use { 'quarto-dev/quarto-nvim',
-    requires = {
-      'jmbuhr/otter.nvim',
-      'neovim/nvim-lspconfig'
-    },
-    config = function()
-      require 'quarto'.setup {
-        lspFeatures = {
-          enabled = true,
-          languages = { 'r', 'python', 'julia' },
-          diagnostics = {
-            enabled = true,
-            triggers = { "BufWrite" }
-          },
-          completion = {
-            enabled = true
-          }
-        }
-      }
-    end
-  }
-
+  -- use { 'quarto-dev/quarto-nvim',
+  --   requires = {
+  --     'jmbuhr/otter.nvim',
+  --     'neovim/nvim-lspconfig'
+  --   },
+  --   config = function()
+  --     require 'quarto'.setup {
+  --       lspFeatures = {
+  --         enabled = true,
+  --         languages = { 'r', 'python', 'julia' },
+  --         diagnostics = {
+  --           enabled = true,
+  --           triggers = { "BufWrite" }
+  --         },
+  --         completion = {
+  --           enabled = true
+  --         }
+  --       }
+  --     }
+  --   end
+  -- }
+  --
    -- Barbar tabstop
   use 'nvim-tree/nvim-web-devicons'
   use {'romgrk/barbar.nvim', requires = 'nvim-web-devicons'}
@@ -489,6 +489,7 @@ mason_lspconfig.setup_handlers {
 }
 
 -- Turn on lsp status information
+-- require 'quarto.global'
 require('fidget').setup()
 
 -- Copilot Setup
@@ -499,29 +500,29 @@ vim.g.copilot_tab_fallback = ""
 
 
 -- Quarto Setup
-local quarto = require'quarto'
+-- local quarto = require'quarto'
 
 
-require'quarto'.setup{
-  debug = false,
-  closePreviewOnExit = true,
-  lspFeatures = {
-    enabled = false,
-    languages = { 'r', 'python', 'julia' },
-    diagnostics = {
-      enabled = true,
-      triggers = { "BufWrite" }
-    },
-    completion = {
-      enabled = false,
-    },
-  },
-  keymap = {
-    hover = 'K',
-    definition = 'gd'
-  }
-}
-
+-- require'quarto'.setup{
+--   debug = false,
+--   closePreviewOnExit = true,
+--   lspFeatures = {
+--     enabled = false,
+--     languages = { 'r', 'python', 'julia' },
+--     diagnostics = {
+--       enabled = false,
+--       triggers = { "BufWrite" }
+--     },
+--     completion = {
+--       enabled = false,
+--     },
+--   },
+--   keymap = {
+--     hover = 'K',
+--     definition = 'gd'
+--   }
+-- }
+--
 -- require 'quarto.global'
 -- require 'quarto.autocommands'
 -- require 'quarto.keymap'
@@ -611,7 +612,7 @@ map('n', '<C-p>', '<Cmd>BufferPick<CR>', opts)
 -- :BarbarDisable - very bad command, should never be used
 
 
-vim.keymap.set('n', '<leader>qp', quarto.quartoPreview, {silent = true, noremap = true})
+-- vim.keymap.set('n', '<leader>qp', quarto.quartoPreview, {silent = true, noremap = true})
 
 vim.api.nvim_set_keymap("i", "<C-j>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
 
