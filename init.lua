@@ -31,38 +31,38 @@ require('packer').startup(function(use)
   -- Package manager
   use 'wbthomason/packer.nvim'
 
-  -- use { -- LSP Configuration & Plugins
-  --   'neovim/nvim-lspconfig',
-  --   requires = {
-  --     -- Automatically install LSPs to stdpath for neovim
-  --     'williamboman/mason.nvim',
-  --     'williamboman/mason-lspconfig.nvim',
-  --
-  --     -- Useful status updates for LSP
-  --     'j-hui/fidget.nvim',
-  --
-  --     -- Additional lua configuration, makes nvim stuff amazing
-  --     'folke/neodev.nvim',
-  --   },
-  -- }
-  --
-  -- use { -- Autocompletion
-  --   'hrsh7th/nvim-cmp',
-  --   requires = { 'hrsh7th/cmp-nvim-lsp', 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip' },
-  -- }
-  --
-  use { -- Highlight, edit, and navigate code
-    'nvim-treesitter/nvim-treesitter',
-    run = function()
-      pcall(require('nvim-treesitter.install').update { with_sync = true })
-    end,
+  use { -- LSP Configuration & Plugins
+    'neovim/nvim-lspconfig',
+    requires = {
+      -- Automatically install LSPs to stdpath for neovim
+      'williamboman/mason.nvim',
+      'williamboman/mason-lspconfig.nvim',
+
+      -- Useful status updates for LSP
+      'j-hui/fidget.nvim',
+
+      -- Additional lua configuration, makes nvim stuff amazing
+      'folke/neodev.nvim',
+    },
   }
 
-  use { -- Additional text objects via treesitter
-    'nvim-treesitter/nvim-treesitter-textobjects',
-    after = 'nvim-treesitter',
+  use { -- Autocompletion
+    'hrsh7th/nvim-cmp',
+    requires = { 'hrsh7th/cmp-nvim-lsp', 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip' },
   }
 
+--   use { -- Highlight, edit, and navigate code
+--     'nvim-treesitter/nvim-treesitter',
+--     run = function()
+--       pcall(require('nvim-treesitter.install').update { with_sync = true })
+--     end,
+--   }
+--
+--   use { -- Additional text objects via treesitter
+--     'nvim-treesitter/nvim-treesitter-textobjects',
+--     after = 'nvim-treesitter',
+--   }
+--
   -- Git related plugins
   use 'tpope/vim-fugitive'
   use 'tpope/vim-rhubarb'
@@ -70,12 +70,12 @@ require('packer').startup(function(use)
 
   -- use 'navarasu/onedark.nvim' -- Theme inspired by Atom
   use 'folke/tokyonight.nvim'
-
+--
   use 'nvim-lualine/lualine.nvim' -- Fancier statusline
   use 'lukas-reineke/indent-blankline.nvim' -- Add indentation guides even on blank lines
   use 'numToStr/Comment.nvim' -- "gc" to comment visual regions/lines
-  use 'tpope/vim-sleuth' -- Detect tabstop and shiftwidth automatically
-
+--   use 'tpope/vim-sleuth' -- Detect tabstop and shiftwidth automatically
+--
   -- Fuzzy Finder (files, lsp, etc)
   use { 'nvim-telescope/telescope.nvim', branch = '0.1.x', requires = { 'nvim-lua/plenary.nvim' } }
 
@@ -96,7 +96,7 @@ require('packer').startup(function(use)
     end
   }
   
-  -- Quarto
+  -- -- Quarto
   -- use { 'quarto-dev/quarto-nvim',
   --   requires = {
   --     'jmbuhr/otter.nvim',
@@ -158,12 +158,12 @@ vim.api.nvim_create_autocmd('BufWritePost', {
   pattern = vim.fn.expand '$MYVIMRC',
 })
 
--------------------------------------------------------------------------------------------
--- Loads personal settings. See file init.lua in 
--- ./lua/custom
---------------------------------------------------------------------------------------------
-require("custom")
-
+-- -------------------------------------------------------------------------------------------
+-- -- Loads personal settings. See file init.lua in 
+-- -- ./lua/custom
+-- --------------------------------------------------------------------------------------------
+-- require("custom")
+--
 --------------------------------------------------------------------------------------------
 -- Vim settings
 --------------------------------------------------------------------------------------------
@@ -327,75 +327,75 @@ require('telescope').setup {
   },
 }
 
-
-
+--
+--
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
 
--- [[ Configure Treesitter ]]
--- See `:help nvim-treesitter`
-require('nvim-treesitter.configs').setup {
-  -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'typescript', 'help', 'vim', 'markdown' },
-
-  highlight = { enable = true },
-  indent = { enable = true, disable = { 'python' } },
-  incremental_selection = {
-    enable = true,
-    keymaps = {
-      init_selection = '<c-space>',
-      node_incremental = '<c-space>',
-      scope_incremental = '<c-s>',
-      node_decremental = '<c-backspace>',
-    },
-  },
-  textobjects = {
-    select = {
-      enable = true,
-      lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
-      keymaps = {
-        -- You can use the capture groups defined in textobjects.scm
-        ['aa'] = '@parameter.outer',
-        ['ia'] = '@parameter.inner',
-        ['af'] = '@function.outer',
-        ['if'] = '@function.inner',
-        ['ac'] = '@class.outer',
-        ['ic'] = '@class.inner',
-      },
-    },
-    move = {
-      enable = true,
-      set_jumps = true, -- whether to set jumps in the jumplist
-      goto_next_start = {
-        [']m'] = '@function.outer',
-        [']]'] = '@class.outer',
-      },
-      goto_next_end = {
-        [']M'] = '@function.outer',
-        [']['] = '@class.outer',
-      },
-      goto_previous_start = {
-        ['[m'] = '@function.outer',
-        ['[['] = '@class.outer',
-      },
-      goto_previous_end = {
-        ['[M'] = '@function.outer',
-        ['[]'] = '@class.outer',
-      },
-    },
-    swap = {
-      enable = true,
-      swap_next = {
-        ['<leader>a'] = '@parameter.inner',
-      },
-      swap_previous = {
-        ['<leader>A'] = '@parameter.inner',
-      },
-    },
-  },
-}
-
-
+-- -- [[ Configure Treesitter ]]
+-- -- See `:help nvim-treesitter`
+-- require('nvim-treesitter.configs').setup {
+--   -- Add languages to be installed here that you want installed for treesitter
+--   ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'typescript', 'help', 'vim', 'markdown' },
+--
+--   highlight = { enable = true },
+--   indent = { enable = true, disable = { 'python' } },
+--   incremental_selection = {
+--     enable = true,
+--     keymaps = {
+--       init_selection = '<c-space>',
+--       node_incremental = '<c-space>',
+--       scope_incremental = '<c-s>',
+--       node_decremental = '<c-backspace>',
+--     },
+--   },
+--   textobjects = {
+--     select = {
+--       enable = true,
+--       lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
+--       keymaps = {
+--         -- You can use the capture groups defined in textobjects.scm
+--         ['aa'] = '@parameter.outer',
+--         ['ia'] = '@parameter.inner',
+--         ['af'] = '@function.outer',
+--         ['if'] = '@function.inner',
+--         ['ac'] = '@class.outer',
+--         ['ic'] = '@class.inner',
+--       },
+--     },
+--     move = {
+--       enable = true,
+--       set_jumps = true, -- whether to set jumps in the jumplist
+--       goto_next_start = {
+--         [']m'] = '@function.outer',
+--         [']]'] = '@class.outer',
+--       },
+--       goto_next_end = {
+--         [']M'] = '@function.outer',
+--         [']['] = '@class.outer',
+--       },
+--       goto_previous_start = {
+--         ['[m'] = '@function.outer',
+--         ['[['] = '@class.outer',
+--       },
+--       goto_previous_end = {
+--         ['[M'] = '@function.outer',
+--         ['[]'] = '@class.outer',
+--       },
+--     },
+--     swap = {
+--       enable = true,
+--       swap_next = {
+--         ['<leader>a'] = '@parameter.inner',
+--       },
+--       swap_previous = {
+--         ['<leader>A'] = '@parameter.inner',
+--       },
+--     },
+--   },
+-- }
+--
+--
 -- LSP settings.
 --  This function gets run when an LSP connects to a particular buffer.
 local on_attach = function(_, bufnr)
@@ -499,57 +499,57 @@ vim.g.copilot_tab_fallback = ""
 
 
 
--- Quarto Setup
--- local quarto = require'quarto'
-
-
--- require'quarto'.setup{
---   debug = false,
---   closePreviewOnExit = true,
---   lspFeatures = {
---     enabled = false,
---     languages = { 'r', 'python', 'julia' },
---     diagnostics = {
---       enabled = false,
---       triggers = { "BufWrite" }
---     },
---     completion = {
---       enabled = false,
---     },
---   },
---   keymap = {
---     hover = 'K',
---     definition = 'gd'
---   }
--- }
+-- -- Quarto Setup
+-- -- local quarto = require'quarto'
 --
--- require 'quarto.global'
--- require 'quarto.autocommands'
--- require 'quarto.keymap'
--- require 'quarto.quarto'
-
---------------------------------------------------------------------------------------------
--- Keymaps Aside from Leader
---------------------------------------------------------------------------------------------
-
--- See `:help vim.keymap.set()`
-vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
-
--- Remap for dealing with word wrap
-vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
-vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
-
--- Remap for File Browser
+--
+-- -- require'quarto'.setup{
+-- --   debug = false,
+-- --   closePreviewOnExit = true,
+-- --   lspFeatures = {
+-- --     enabled = false,
+-- --     languages = { 'r', 'python', 'julia' },
+-- --     diagnostics = {
+-- --       enabled = false,
+-- --       triggers = { "BufWrite" }
+-- --     },
+-- --     completion = {
+-- --       enabled = false,
+-- --     },
+-- --   },
+-- --   keymap = {
+-- --     hover = 'K',
+-- --     definition = 'gd'
+-- --   }
+-- -- }
+-- --
+-- -- require 'quarto.global'
+-- -- require 'quarto.autocommands'
+-- -- require 'quarto.keymap'
+-- -- require 'quarto.quarto'
+--
+-- --------------------------------------------------------------------------------------------
+-- -- Keymaps Aside from Leader
+-- --------------------------------------------------------------------------------------------
+--
+-- -- See `:help vim.keymap.set()`
+-- vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
+--
+-- -- Remap for dealing with word wrap
+-- vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+-- vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+--
+-- -- Remap for File Browser
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
-
--- Diagnostic keymaps
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
-vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist)
-
-
--- See `:help telescope.builtin`
+--
+-- -- Diagnostic keymaps
+-- vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
+-- vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
+-- vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
+-- vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist)
+--
+--
+-- -- See `:help telescope.builtin`
 vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
 vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
 vim.keymap.set('n', '<leader>/', function()
@@ -601,10 +601,10 @@ map('n', '<C-c>', '<Cmd>BufferClose<CR>', opts)
 -- Magic buffer-picking mode
 map('n', '<C-p>', '<Cmd>BufferPick<CR>', opts)
 -- Sort automatically by...
--- map('n', '<Space>bb', '<Cmd>BufferOrderByBufferNumber<CR>', opts)
--- map('n', '<Space>bd', '<Cmd>BufferOrderByDirectory<CR>', opts)
--- map('n', '<Space>bl', '<Cmd>BufferOrderByLanguage<CR>', opts)
--- map('n', '<Space>bw', '<Cmd>BufferOrderByWindowNumber<CR>', opts)
+map('n', '<Space>bb', '<Cmd>BufferOrderByBufferNumber<CR>', opts)
+map('n', '<Space>bd', '<Cmd>BufferOrderByDirectory<CR>', opts)
+map('n', '<Space>bl', '<Cmd>BufferOrderByLanguage<CR>', opts)
+map('n', '<Space>bw', '<Cmd>BufferOrderByWindowNumber<CR>', opts)
 
 
 -- Other:
@@ -612,13 +612,13 @@ map('n', '<C-p>', '<Cmd>BufferPick<CR>', opts)
 -- :BarbarDisable - very bad command, should never be used
 
 
--- vim.keymap.set('n', '<leader>qp', quarto.quartoPreview, {silent = true, noremap = true})
-
-vim.api.nvim_set_keymap("i", "<C-j>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
-
-vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { silent = true, noremap = true })
-vim.keymap.set('n', ':tt', ':terminal', { silent = true, noremap = true })
-
-
--- The line beneath this is called `modeline`. See `:help modeline`
--- vim: ts=2 sts=2 sw=2 et
+-- -- vim.keymap.set('n', '<leader>qp', quarto.quartoPreview, {silent = true, noremap = true})
+--
+-- vim.api.nvim_set_keymap("i", "<C-j>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
+--
+-- vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { silent = true, noremap = true })
+-- vim.keymap.set('n', ':tt', ':terminal', { silent = true, noremap = true })
+--
+--
+-- -- The line beneath this is called `modeline`. See `:help modeline`
+-- -- vim: ts=2 sts=2 sw=2 et
