@@ -118,8 +118,16 @@ require('packer').startup(function(use)
   --     }
   --   end
   -- }
-  --
-   -- Barbar tabstop
+  -- Quarto
+  use { 'quarto-dev/quarto-nvim',
+     requires = {
+       'jmbuhr/otter.nvim',
+       'neovim/nvim-lspconfig'
+     }
+  }
+  
+
+  -- Barbar tabstop
   use 'nvim-tree/nvim-web-devicons'
   use {'romgrk/barbar.nvim', requires = 'nvim-web-devicons'}
 
@@ -449,7 +457,7 @@ end
 local servers = {
   -- clangd = {},
   -- gopls = {},
-  -- pyright = {},
+  pyright = {},
   -- rust_analyzer = {},
   -- tsserver = {},
 
@@ -499,8 +507,8 @@ vim.g.copilot_tab_fallback = ""
 
 
 
--- -- Quarto Setup
--- -- local quarto = require'quarto'
+-- Quarto Setup
+local quarto = require'quarto'
 --
 --
 -- -- require'quarto'.setup{
@@ -526,7 +534,7 @@ vim.g.copilot_tab_fallback = ""
 -- -- require 'quarto.global'
 -- -- require 'quarto.autocommands'
 -- -- require 'quarto.keymap'
--- -- require 'quarto.quarto'
+require 'quarto.quarto'
 --
 -- --------------------------------------------------------------------------------------------
 -- -- Keymaps Aside from Leader
@@ -606,18 +614,21 @@ map('n', '<Space>bd', '<Cmd>BufferOrderByDirectory<CR>', opts)
 map('n', '<Space>bl', '<Cmd>BufferOrderByLanguage<CR>', opts)
 map('n', '<Space>bw', '<Cmd>BufferOrderByWindowNumber<CR>', opts)
 
+map('n', '<C-d>', '<C-d>zz', opts)
+map('n', '<C-u>', '<C-u>zz', opts)
+
 
 -- Other:
 -- :BarbarEnable - enables barbar (enabled by default)
 -- :BarbarDisable - very bad command, should never be used
 
 
--- -- vim.keymap.set('n', '<leader>qp', quarto.quartoPreview, {silent = true, noremap = true})
---
+vim.keymap.set('n', '<leader>qp', quarto.quartoPreview, {silent = true, noremap = true})
+
 -- vim.api.nvim_set_keymap("i", "<C-j>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
 --
--- vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { silent = true, noremap = true })
--- vim.keymap.set('n', ':tt', ':terminal', { silent = true, noremap = true })
+vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { silent = true, noremap = true })
+vim.keymap.set('n', ':tt', ':terminal', { silent = true, noremap = true })
 --
 --
 -- -- The line beneath this is called `modeline`. See `:help modeline`
