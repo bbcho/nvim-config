@@ -51,18 +51,18 @@ require('packer').startup(function(use)
     requires = { 'hrsh7th/cmp-nvim-lsp', 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip' },
   }
 
---   use { -- Highlight, edit, and navigate code
---     'nvim-treesitter/nvim-treesitter',
---     run = function()
---       pcall(require('nvim-treesitter.install').update { with_sync = true })
---     end,
---   }
---
---   use { -- Additional text objects via treesitter
---     'nvim-treesitter/nvim-treesitter-textobjects',
---     after = 'nvim-treesitter',
---   }
---
+  use { -- Highlight, edit, and navigate code
+    'nvim-treesitter/nvim-treesitter',
+    run = function()
+      pcall(require('nvim-treesitter.install').update { with_sync = true })
+    end,
+  }
+
+  use { -- Additional text objects via treesitter
+    'nvim-treesitter/nvim-treesitter-textobjects',
+    after = 'nvim-treesitter',
+  }
+
   -- Git related plugins
   use 'tpope/vim-fugitive'
   use 'tpope/vim-rhubarb'
